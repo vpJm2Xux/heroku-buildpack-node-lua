@@ -19,16 +19,16 @@ function indent() {
 dest=$BUILD_DIR/.heroku/node-lua
 binary="https://github.com/vpJm2Xux/heroku-buildpack-node-lua/releases/download/v0.0.4/node-lua-moon-heroku.tar.xz"
 
-echo "-----> Vendoring binaries"
+echo "-----> Installing binaries"
 echo "Fetching $dest" | indent
 mkdir -p $dest
-wget $binary -O /tmp/pkg.tar.xz
-tar xJ -C $dest -f /tmp/pkg.tar.xz
+curl -sL $binary | tar xJC $dest
+echo "Done" | indent
 
 echo "export PATH=\"$BUILD_DIR/.heroku/node-lua/bin:\$PATH\"" > $BP_DIR/export
-echo "export CPATH=\"$BUILD_DIR/.heroku/node-lua/include:\$CPATH\"" >> $BP_DIR/export
+echo "export NODELUA_INCLUDE=\"$BUILD_DIR/.heroku/node-lua/include\"" >> $BP_DIR/export
+echo "export NODELUA_LIB=\"$BUILD_DIR/.heroku/node-lua/lib\"" >> $BP_DIR/export
 
 mkdir -p $BUILD_DIR/.profile.d
 echo "export PATH=\"$HOME/.heroku/node-lua/bin:$PATH\"" > $BUILD_DIR/.profile.d/node-lua.sh
 echo "export LD_LIBRARY_PATH=\"$HOME/.heroku/node-lua/lib:$LD_LIBRARY_PATH\"" >> $BUILD_DIR/.profile.d/node-lua.sh
-echo "export CPATH=\"$HOME/.heroku/node-lua/include:$CPATH\"" >> $BUILD_DIR/.profile.d/node-lua.sh
