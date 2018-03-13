@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+set -e
+
+BUILD_DIR=${1:-}
+CACHE_DIR=${2:-}
+ENV_DIR=${3:-}
+BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
+
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+    Darwin) sed -l "$c";;
+    *)      sed -u "$c";;
+  esac
+}
+
+dest=$BUILD_DIR/.heroku/node-lua
+binary="https://github.com/vpJm2Xux/heroku-buildpack-node-lua/releases/download/v0.0.3/node-lua-moon-heroku.tar.xz"
+
+echo "-----> Vendoring binaries"
+echo "Fetching $dest" | indent
+mkdir -p $dest
+wget $binary -O /tmp/pkg.tar.xz
+tar xJ -C $dest -f /tmp/pkg.tar.xz
+
+echo "export PATH=\"$BUILD_DIR/.heroku/node-lua/bin:\$PATH\"" > $BP_DIR/export
+echo "export CPATH=\"$BUILD_DIR/.heroku/node-lua/include:\$CPATH\"" >> $BP_DIR/export
+
+mkdir -p $BUILD_DIR/.profile.d
+echo "export PATH=\"$HOME/.heroku/node-lua/bin:$PATH\"" > $BUILD_DIR/.profile.d/node-lua.sh
+echo "export LD_LIBRARY_PATH=\"$HOME/.heroku/node-lua/lib:$LD_LIBRARY_PATH\"" >> $BUILD_DIR/.profile.d/node-lua.sh
+echo "export CPATH=\"$HOME/.heroku/node-lua/include:$CPATH\"" >> $BUILD_DIR/.profile.d/node-lua.sh
