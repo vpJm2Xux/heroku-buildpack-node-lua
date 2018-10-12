@@ -17,7 +17,7 @@ function indent() {
 }
 
 dest=$BUILD_DIR/.heroku/node-lua
-binary="https://github.com/vpJm2Xux/heroku-buildpack-node-lua/releases/download/v0.0.4/node-lua-moon-heroku.tar.xz"
+binary="https://github.com/vpJm2Xux/heroku-buildpack-node-lua/releases/download/v0.0.5/node-lua-moon-heroku.tar.xz"
 
 echo "-----> Installing binaries"
 echo "Fetching $dest" | indent
