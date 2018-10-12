@@ -20,13 +20,21 @@ cd LuaJIT-2.0.5
 make PREFIX=/app/.heroku/node-lua install
 
 cd /tmp
-wget https://luarocks.org/releases/luarocks-2.4.3.tar.gz
-tar zxpf luarocks-2.4.3.tar.gz
-cd luarocks-2.4.3
+wget https://luarocks.org/releases/luarocks-3.0.3.tar.gz
+tar zxpf luarocks-3.0.3.tar.gz
+cd luarocks-3.0.3
+
 ./configure --prefix=/app/.heroku/node-lua --with-lua=/app/.heroku/node-lua
-make bootstrap
-/app/.heroku/node-lua/bin/luarocks install luasocket
+make install
 
-/app/.heroku/node-lua/bin/luarocks install moonscript
+cd /app/.heroku/node-lua
 
-cd /app/.heroku/node-lua && tar cvJf node-lua-moon-heroku.tar.xz *
+./bin/luarocks install lua-zlib
+./bin/luarocks install luaossl
+./bin/luarocks install lua-cjson2
+./bin/luarocks install basexx
+./bin/luarocks install lua-yaml
+./bin/luarocks install lpeg
+./bin/luarocks install moonscript
+
+tar cvJf ../node-lua-moon-heroku.tar.xz *
